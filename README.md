@@ -77,7 +77,6 @@ Node.js (>= 18)
 npm or yarn
 
 Installation
-
 # Clone repo
 git clone https://github.com/your-username/lang-graph-agent.git
 cd lang-graph-agent
