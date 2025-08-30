@@ -1,0 +1,320 @@
+{
+  "agent": {
+    "id": "langie-customer-support",
+    "name": "Langie - Customer Support Agent",
+    "description": "A structured and logical Lang Graph Agent for customer support workflows",
+    "version": "1.0.0",
+    "personality": "You are Langie — a structured and logical Lang Graph Agent. You think in stages: each node represents a clear phase of the workflow. You carefully carry forward state variables from one stage to the next. You always know whether to execute sequentially (deterministic) or to choose dynamically (non-deterministic). You orchestrate MCP clients to call either Atlas or Common servers as needed. You log every decision clearly and output a final structured payload."
+  },
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "customer_name": {
+        "type": "string",
+        "description": "Customer's full name",
+        "required": true
+      },
+      "email": {
+        "type": "string",
+        "format": "email",
+        "description": "Customer's email address",
+        "required": true
+      },
+      "query": {
+        "type": "string",
+        "description": "Customer's support request or question",
+        "required": true
+      },
+      "priority": {
+        "type": "string",
+        "enum": ["low", "medium", "high", "urgent"],
+        "description": "Priority level of the support request",
+        "default": "medium"
+      },
+      "ticket_id": {
+        "type": "string",
+        "description": "Unique ticket identifier",
+        "auto_generated": true
+      }
+    }
+  },
+  "stages": [
+    {
+      "id": "intake",
+      "name": "INTAKE",
+      "emoji": "📥",
+      "description": "Accept incoming request payload",
+      "mode": "deterministic",
+      "abilities": [
+        {
+          "name": "accept_payload",
+          "description": "Capture incoming request payload (eg: customer name, email, query, priority, ticket_id)",
+          "server": "COMMON",
+          "required": true
+        }
+      ],
+      "next_stages": ["understand"],
+      "example_prompt": "Execute abilities in sequence to capture the customer payload"
+    },
+    {
+      "id": "understand",
+      "name": "UNDERSTAND",
+      "emoji": "🧠", 
+      "description": "Parse and extract entities from request",
+      "mode": "deterministic",
+      "abilities": [
+        {
+          "name": "parse_request_text",
+          "description": "Convert unstructured request to structured data",
+          "server": "COMMON",
+          "required": true
+        },
+        {
+          "name": "extract_entities",
+          "description": "Identify product, account, dates",
+          "server": "ATLAS",
+          "required": true
+        }
+      ],
+      "next_stages": ["prepare"],
+      "example_prompt": "Execute abilities in sequence to parse and understand the customer request"
+    },
+    {
+      "id": "prepare",
+      "name": "PREPARE",
+      "emoji": "🛠️",
+      "description": "Normalize and enrich data",
+      "mode": "deterministic", 
+      "abilities": [
+        {
+          "name": "normalize_fields",
+          "description": "Standardize dates, codes, IDs",
+          "server": "COMMON",
+          "required": true
+        },
+        {
+          "name": "enrich_records",
+          "description": "Add SLA, historical ticket info",
+          "server": "ATLAS",
+          "required": true
+        },
+        {
+          "name": "add_flags_calculations",
+          "description": "Compute priority or SLA risk",
+          "server": "COMMON",
+          "required": true
+        }
+      ],
+      "next_stages": ["ask", "retrieve"],
+      "example_prompt": "Execute abilities in sequence to normalize and enrich the customer data"
+    },
+    {
+      "id": "ask", 
+      "name": "ASK",
+      "emoji": "❓",
+      "description": "Request missing information",
+      "mode": "human",
+      "abilities": [
+        {
+          "name": "clarify_question",
+          "description": "Request missing information",
+          "server": "ATLAS",
+          "required": true
+        }
+      ],
+      "next_stages": ["wait"],
+      "example_prompt": "Generate clarifying questions to gather missing information from the customer"
+    },
+    {
+      "id": "wait",
+      "name": "WAIT", 
+      "emoji": "⏳",
+      "description": "Wait for and process human response",
+      "mode": "deterministic",
+      "abilities": [
+        {
+          "name": "extract_answer",
+          "description": "Wait and capture concise response",
+          "server": "ATLAS",
+          "required": true
+        },
+        {
+          "name": "store_answer",
+          "description": "Update payload with response",
+          "server": "STATE_MANAGEMENT",
+          "required": true
+        }
+      ],
+      "next_stages": ["retrieve"],
+      "example_prompt": "Execute abilities in sequence to capture and store the customer's response"
+    },
+    {
+      "id": "retrieve",
+      "name": "RETRIEVE",
+      "emoji": "📚",
+      "description": "Search knowledge base",
+      "mode": "deterministic",
+      "abilities": [
+        {
+          "name": "knowledge_base_search",
+          "description": "Lookup KB or FAQ",
+          "server": "ATLAS",
+          "required": true
+        },
+        {
+          "name": "store_data",
+          "description": "Attach retrieved info to payload",
+          "server": "STATE_MANAGEMENT",
+          "required": true
+        }
+      ],
+      "next_stages": ["decide"],
+      "example_prompt": "Execute abilities in sequence to search knowledge base and store relevant information"
+    },
+    {
+      "id": "decide",
+      "name": "DECIDE",
+      "emoji": "⚖️",
+      "description": "Evaluate solutions and decide on escalation",
+      "mode": "non-deterministic",
+      "abilities": [
+        {
+          "name": "solution_evaluation",
+          "description": "Score potential solutions 1-100",
+          "server": "COMMON",
+          "required": true
+        },
+        {
+          "name": "escalation_decision",
+          "description": "Assign to human agent if score <90",
+          "server": "ATLAS",
+          "required": true
+        },
+        {
+          "name": "update_payload",
+          "description": "Record decision outcomes",
+          "server": "STATE_MANAGEMENT",
+          "required": true
+        }
+      ],
+      "next_stages": ["update", "create"],
+      "example_prompt": "Score solutions and escalate if <90. Choose dynamically between updating ticket or creating response based on evaluation results"
+    },
+    {
+      "id": "update",
+      "name": "UPDATE",
+      "emoji": "🔄",
+      "description": "Update ticket status",
+      "mode": "deterministic",
+      "abilities": [
+        {
+          "name": "update_ticket",
+          "description": "Modify status, fields, priority",
+          "server": "ATLAS",
+          "required": true
+        },
+        {
+          "name": "close_ticket", 
+          "description": "Mark issue resolved",
+          "server": "ATLAS",
+          "required": false
+        }
+      ],
+      "next_stages": ["create"],
+      "example_prompt": "Execute abilities in sequence to update ticket status and metadata"
+    },
+    {
+      "id": "create",
+      "name": "CREATE",
+      "emoji": "✍️",
+      "description": "Generate customer response",
+      "mode": "deterministic",
+      "abilities": [
+        {
+          "name": "response_generation",
+          "description": "Draft customer reply",
+          "server": "COMMON",
+          "required": true
+        }
+      ],
+      "next_stages": ["do"],
+      "example_prompt": "Execute abilities in sequence to generate a personalized customer response"
+    },
+    {
+      "id": "do",
+      "name": "DO",
+      "emoji": "🏃",
+      "description": "Execute actions and notifications",
+      "mode": "deterministic",
+      "abilities": [
+        {
+          "name": "execute_api_calls",
+          "description": "Trigger CRM/order system actions",
+          "server": "ATLAS",
+          "required": true
+        },
+        {
+          "name": "trigger_notifications",
+          "description": "Notify customer",
+          "server": "ATLAS",
+          "required": true
+        }
+      ],
+      "next_stages": ["complete"],
+      "example_prompt": "Execute abilities in sequence to perform system actions and send notifications"
+    },
+    {
+      "id": "complete",
+      "name": "COMPLETE",
+      "emoji": "✅",
+      "description": "Output final payload",
+      "mode": "deterministic",
+      "abilities": [
+        {
+          "name": "output_payload",
+          "description": "Print final structured payload",
+          "server": "COMMON",
+          "required": true
+        }
+      ],
+      "next_stages": [],
+      "example_prompt": "Execute abilities in sequence to output the final processed payload"
+    }
+  ],
+  "mcp_servers": {
+    "ATLAS": {
+      "description": "External systems integration (CRM, Knowledge Base, etc.)",
+      "capabilities": [
+        "extract_entities",
+        "enrich_records", 
+        "clarify_question",
+        "extract_answer",
+        "knowledge_base_search",
+        "escalation_decision",
+        "update_ticket",
+        "close_ticket",
+        "execute_api_calls",
+        "trigger_notifications"
+      ]
+    },
+    "COMMON": {
+      "description": "Internal processing abilities (no external dependencies)",
+      "capabilities": [
+        "parse_request_text",
+        "normalize_fields",
+        "add_flags_calculations", 
+        "solution_evaluation",
+        "response_generation"
+      ]
+    }
+  },
+  "workflow_config": {
+    "initial_stage": "intake",
+    "final_stage": "complete",
+    "state_persistence": true,
+    "parallel_execution": false,
+    "timeout_seconds": 300,
+    "retry_attempts": 3,
+    "escalation_threshold": 90
+  }
+}
