@@ -1,96 +1,94 @@
-Langie – Lang Graph Agent
+# **Langie – AI-Powered Workflow Orchestrator**
 
-🚀 Customer Support Workflow Orchestrator built with graph-based stage modeling.
+**Langie** (Lang Graph Agent) is a powerful, graph-based workflow engine tailored for customer support automation. It visualizes and manages multi-step ticket processing, seamlessly carrying queries through stages—either sequentially or dynamically based on context.
 
-Langie is an AI-powered workflow orchestrator that manages customer support tickets step by step.
-It models customer queries as a graph with 11 workflow stages (INTAKE → COMPLETE), supporting deterministic and non-deterministic execution, state persistence, and MCP client integration.
+---
 
-🛠️ Technologies Used
+## Why This Project Matters
 
-This project is built with:
+* Transforms complex support flows into a visual, reliable pipeline
+* Combines structured logic with AI-driven adaptability
+* Designed for real-world readiness: responsive UI, error correction, and seamless integration
 
-⚡ Vite – fast frontend tooling
+---
 
-🟦 TypeScript – strong typing for reliability
+## Key Skills & Technologies
 
-⚛️ React – component-based UI
+| Area                      | Tools & Approach                                                      |
+| ------------------------- | --------------------------------------------------------------------- |
+| **Modern Frontend Stack** | Vite, React (TypeScript), Tailwind CSS — for modular, performant UI   |
+| **Component Design**      | Opinionated shadcn‑ui layouts enhance consistency and aesthetics      |
+| **Workflow Modeling**     | Graph‑based orchestration across 11 stages—from INTAKE to COMPLETE    |
+| **Execution Flexibility** | Supports both deterministic and conditional (non‑deterministic) paths |
+| **State Management**      | Persists process status across stages for resilience and debugging    |
+| **Integration Layer**     | Connects with MCP’s Atlas and Common servers for robust backend logic |
+| **UX & Reliability**      | Real-time visualization, control actions (Start/Step/Reset), and logs |
 
-🎨 Tailwind CSS – modern utility-first styling
+---
 
-🧩 shadcn-ui – elegant, reusable UI components
+## Workflow Stages in Action
 
-📊 Features
+Langie drives support ticket execution through well‑defined phases:
 
-Graph Orchestration with 11 customer support stages
+1. **INTAKE** – Captures incoming customer message
+2. **UNDERSTAND** – Parses and extracts meaningful intent/data
+3. **PREPARE** – Applies normalization, enrichment, risk tagging
+4. **ASK** – Queries the user for clarification
+5. **WAIT** – Pauses for human response
+6. **RETRIEVE** – Fetches context or knowledge base references
+7. **DECIDE** – Determines next steps or escalates
+8. **UPDATE** – Alters ticket state or adds metadata
+9. **CREATE** – Drafts reply or system notification
+10. **DO** – Executes API calls or actions triggered by logic
+11. **COMPLETE** – Finalizes and outputs structured data or response
 
-Deterministic & Non-deterministic Execution (sequential or dynamic ability selection)
+---
 
-State Persistence across all workflow stages
+## Getting Started
 
-MCP Client Integration (Atlas & Common servers)
+### Prerequisites
 
-Error Handling & Escalation Management
+* Node.js (v18 or higher)
+* npm or yarn for package management
 
-Real-time Workflow Visualization with execution tracking
+### Run Locally
 
-Interactive Controls (Start, Step, Reset, Scenario Selection)
+```bash
+git clone https://github.com/TharunMopada/Langie.git
+cd Langie
+npm install        # or yarn install
+npm run dev        # or yarn dev
+```
 
-🔄 Workflow Stages
+Once running, enter a customer query in the UI and follow the execution through all workflow stages—complete with visual tracking, logs, and state data.
 
-INTAKE 📥 – Accept customer payload
+---
 
-UNDERSTAND 🧠 – Parse request, extract entities
+## Live Demo
 
-PREPARE 🛠️ – Normalize fields, enrich records, add risk flags
+Access a working demo here: [langie.vercel.app](https://langie.vercel.app)
+(Ensure you’ve deployed the latest code for accurate testing.)
 
-ASK ❓ – Request clarification from customer
+---
 
-WAIT ⏳ – Process human response
+## Why I'm Proud of This Project
 
-RETRIEVE 📚 – Search knowledge base
+* Designed a **graph‑oriented orchestration framework** for complex customer support flows
+* Used **modern frontend architecture** (TypeScript, Vite, React, Tailwind) to deliver polished UX
+* Enabled **flexible logic paths** (always‑on vs. conditional flows) for robust real‑world handling
+* Built interactive visualization and control tooling for clarity and debugging efficiency
 
-DECIDE ⚖️ – Evaluate solutions, escalate if needed
+---
 
-UPDATE 🔄 – Update ticket fields/status
+## Future Enhancements
 
-CREATE ✍️ – Draft customer response
+* Add custom stage editors for more flexible flow creation
+* Expand integrations with third-party APIs and knowledge bases
+* Provide sample datasets and demo queries for onboarding
+* Include automated testing and CI/CD pipeline setup
 
-DO 🏃 – Execute API calls, send notifications
+---
 
-COMPLETE ✅ – Output final structured payload
+## License
 
-📸 Screenshots
-Workflow Dashboard
-<img width="1833" height="933" alt="Screenshot 2025-08-30 113725" src="https://github.com/user-attachments/assets/e2803057-092c-4b0c-bb12-369965bc8943" />
-<img width="1332" height="865" alt="Screenshot 2025-08-30 101940" src="https://github.com/user-attachments/assets/e6dc5e5d-eacc-42b7-ba47-671d1bce4b50" />
-<img width="763" height="874" alt="Screenshot 2025-08-30 113849" src="https://github.com/user-attachments/assets/a11025dc-4d26-415c-97b6-b2f243918c56" />
-<img width="387" height="892" alt="Screenshot 2025-08-30 113918" src="https://github.com/user-attachments/assets/f82841fb-4aff-4fce-bed8-2ac303792b71" />
-<img width="397" height="921" alt="Screenshot 2025-08-30 113940" src="https://github.com/user-attachments/assets/0404dbf4-02f0-4880-9b35-43474db63553" />
-<img width="1677" height="611" alt="Screenshot 2025-08-30 113954" src="https://github.com/user-attachments/assets/04dcf0da-0839-49ef-8518-c908c5fc7c66" />
-<img width="1187" height="928" alt="Screenshot 2025-08-30 114018" src="https://github.com/user-attachments/assets/08e0557a-6fef-4518-97b8-fd06ecc574e6" />
-
-🚀 Getting Started
-Prerequisites
-
-Node.js (>= 18)
-
-npm or yarn
-
-Installation
-# Clone repo
-git clone https://github.com/your-username/lang-graph-agent.git
-cd lang-graph-agent
-
-# Install dependencies
-npm install
-
-# Start development server
-npm run dev
-
-🎯 Demo Run
-
-Enter a customer query in the input form
-
-Follow the workflow execution (deterministic + non-deterministic stages)
-
-View logs, state variables, and final structured payload
+This project is licensed under the **MIT License** – feel free to use and adapt.
