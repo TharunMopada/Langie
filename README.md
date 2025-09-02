@@ -67,7 +67,6 @@ Once running, enter a customer query in the UI and follow the execution through 
 ## Live Demo
 
 Access a working demo here: [langie.vercel.app](https://langie.vercel.app)
-(Ensure you’ve deployed the latest code for accurate testing.)
 
 ---
 
